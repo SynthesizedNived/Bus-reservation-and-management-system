@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#12633f">
+<title>KSRTC - Swift</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topline">
+<span>KSRTC - Swift</span>
+<span>Safe journeys. Dependable service.</span>
+</div>
+<header class="header">
+<a class="brand" href="#">
+<span class="mark">
+    <img src="assets\ksrtc-logo.png">
+</span>
+<span>
+<b>KSRTC <i>Swift</i>
+</b>
+<small>Ticket booking portal</small>
+</span>
+</a>
+<button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mainNav"><span></span><span></span><span></span></button>
+<nav id="mainNav">
+<a href="#search">Book tickets</a>
+<a href="#timetable">Timetable</a>
+<a href="#why">Why Swift?</a>
+<button class="linkbtn" id="myBookingsBtn">My bookings</button>
+<button class="btn red" id="loginBtn">Sign in</button>
+<button class="btn green" id="adminBtn">Admin demo</button>
+<button class="btn outline" id="crewBtn">Crew sign in</button>
+</nav>
+</header>
+<main>
+<section class="hero">
+<div class="hero-copy">
+<span class="eyebrow">YOUR JOURNEY, MADE SIMPLE</span>
+<h1>Welcome to<br>
+<em>KSRTC - Swift</em>
+</h1>
+<p>Your journey starts here. Explore scheduled KSRTC Swift services, choose your seat, and keep your booking details in one convenient place.</p>
+<div class="pills">
+<span>✓ Clear fares</span>
+<span>✓ Choose your seat</span>
+<span>✓ Printable ticket</span>
+</div>
+</div>
+<div class="hero-art" aria-label="KSRTC Swift roleplay gallery">
+    <div class="hero-slides">
+      <img class="hero-slide active" src="https://staticassets.onlineksrtcswift.com/images/onlineksrtcswift.com-gallery-29-1756703797.jpg" alt="Intercity passenger bus">
+      <img class="hero-slide" src="https://staticassets.onlineksrtcswift.com/images/onlineksrtcswift.com-gallery-0-1787056630.jpg" alt="Coach bus on the road">
+      <img class="hero-slide" src="https://staticassets.onlineksrtcswift.com/images/onlineksrtcswift.com-gallery-6-1685422849.jpg" alt="Passenger bus ready for departure">
+      <img class="hero-slide" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTjKPfKUZtTyKERuLZGZFyozHpoC-x1Oci9tiyZ7IH85GAbtuq-XrlJT8e&s=10" alt="Road trip scenery">
+    </div>
+    <div class="slider-dots" aria-label="Gallery slide selection"><button class="active" data-slide="0" aria-label="Show image 1"></button><button data-slide="1" aria-label="Show image 2"></button><button data-slide="2" aria-label="Show image 3"></button><button data-slide="3" aria-label="Show image 4"></button></div>
+    <span class="slider-caption">KSRTC Swift</span>
+</div>
+</section>
+<section class="search-card" id="search">
+<div class="section-title">
+<div>
+<span class="eyebrow">BOOK YOUR JOURNEY</span>
+<h2>Where would you like to go?</h2>
+</div>
+<span class="secure">▣ Demo reservation</span>
+</div>
+<form id="searchForm" class="search-grid">
+<label>FROM<input id="from" placeholder="Departure city" autocomplete="off" required>
+</label>
+<button type="button" class="swap" id="swap">⇄</button>
+<label>TO<input id="to" placeholder="Arrival city" autocomplete="off" required>
+</label>
+
+<label>JOURNEY DATE<input id="date" type="date" required>
+</label>
+<label>RETURN DATE <small>OPTIONAL</small>
+<input id="returnDate" type="date">
+</label>
+<button class="btn green search-btn">Search buses <span>→</span>
+</button>
+<label class="check">
+<input id="roundTrip" type="checkbox"> Round trip</label>
+</form>
+</section>
+<section class="results hidden" id="results">
+<div class="section-title">
+<div>
+<span class="eyebrow">AVAILABLE SERVICES</span>
+<h2 id="resultTitle">Choose your service</h2>
+<p id="resultSub">Select a service to view its seats.</p>
+</div>
+<button class="btn outline" id="editSearch">Edit search</button>
+</div>
+<div id="serviceList" class="service-list">
+</div>
+</section>
+<section class="timetable-section" id="timetable">
+  <div class="section-title"><div><span class="eyebrow">SERVICE INFORMATION</span><h2>Published timetable</h2><p>Browse all currently scheduled roleplay services.</p></div><span class="secure">Updated from published services</span></div>
+  <div class="table-wrap timetable-wrap"><table class="manifest-table timetable-table"><thead><tr><th>Route</th><th>Date</th><th>Departure</th><th>Arrival</th><th>Service</th><th>Fare</th><th>Status</th></tr></thead><tbody id="timetableBody"><tr><td colspan="7" class="table-empty">Loading services…</td></tr></tbody></table></div>
+</section>
+<section class="features" id="why">
+<span class="eyebrow">THE NEO STANDARD</span>
+<h2>Travel with clarity.</h2>
+<div class="feature-grid">
+<article>
+<span class="feature-icon">↗</span>
+<h3>Routes made clear</h3>
+<p>Compare timings, fares, boarding points and planned rest stops.</p>
+</article>
+<article>
+<span class="feature-icon redicon">▦</span>
+<h3>Your seat, your choice</h3>
+<p>Pick an available seat from a simple visual seat map.</p>
+</article>
+<article>
+<span class="feature-icon">▤</span>
+<h3>Ticket in one place</h3>
+<p>Review your bookings and print tickets from this browser.</p>
+</article>
+</div>
+</section>
+<section class="notice">
+<div>
+<span class="eyebrow">BUILT FOR THE COMMUNITY</span>
+<h2>Your next journey awaits.</h2>
+<p>Discover roleplay routes, review service timings, and reserve a seat for your next trip with the KSRTC Swift.</p>
+</div>
+<a class="btn white notice-cta" href="#search">Find a service</a>
+</section>
+</main>
+<footer>
+<div class="brand">
+<span class="mark">N</span>
+<span>
+<b>KSRTC  <i>Swift</i>
+</b>
+<small>Ticket booking portal</small>
+</span>
+</div>
+<p>Independent demonstration platform. Not an official KSRTC website.</p>
+<small>© <span id="year">
+</span> Neo OPRS · Offline prototype</small>
+</footer>
+<div class="overlay hidden" id="authModal">
+<div class="modal">
+<button class="x" data-close>×</button>
+<span class="eyebrow">WELCOME TO NEO OPRS</span>
+<h2 id="authTitle">Sign in</h2>
+<p id="authSub">Sign in to manage your bookings.</p>
+<div class="tabs">
+<button class="active" data-tab="login">User sign in</button>
+<button data-tab="register">Create account</button>
+<button data-tab="admin">Admin demo</button>
+<button data-tab="crew">Crew sign in</button>
+</div>
+<form id="authForm">
+<label id="nameField" class="hidden">Full name<input id="authName" placeholder="Your full name">
+</label>
+<label>Email address<input id="authEmail" type="email" placeholder="you@example.com" required>
+</label>
+<label>Password<input id="authPassword" type="password" minlength="4" placeholder="Demo password" required>
+</label>
+<p class="hint" id="authHint">Demo only: account details stay in this browser.</p>
+<button class="btn green full" id="authSubmit">Sign in →</button>
+<p class="error" id="authError">
+</p>
+</form>
+<p class="demo-creds">Admin demo login: <b>admin@neo.demo</b> / <b>admin123</b>
+</p>
+</div>
+</div>
+<div class="overlay hidden" id="seatModal">
+<div class="modal wide">
+<button class="x" data-close>×</button>
+<span class="eyebrow">SELECT YOUR SEAT</span>
+<h2 id="seatTitle">Choose a seat</h2>
+<p id="seatMeta">
+</p>
+<div class="legend">
+<span>
+<i class="free">
+</i> Available</span>
+<span>
+<i class="selected">
+</i> Selected</span>
+<span>
+<i class="taken">
+</i> Unavailable</span>
+<span>
+<i class="conductor">
+</i> Conductor</span>
+</div>
+<div class="front">FRONT OF BUS <span>◉</span>
+</div>
+<div class="seat-grid" id="seatGrid">
+</div>
+<div class="seat-bottom">
+<span>Selected: <b id="selectedSeat">None</b>
+</span>
+<span>Fare: <b id="seatFare">₹0</b>
+</span>
+</div>
+<button class="btn green full" id="continuePassenger" disabled>Passenger details →</button>
+<p class="hint">Choose up to 6 seats per booking. Seats are numbered, with a central aisle and a 2+2 layout.</p>
+</div>
+</div>
+<div class="overlay hidden" id="passengerModal">
+<div class="modal">
+<button class="x" data-close>×</button>
+<span class="eyebrow">PASSENGER DETAILS</span>
+<h2>Almost there.</h2>
+<p id="passengerMeta">
+</p>
+<form id="passengerForm">
+<div id="passengerFields"></div>
+<button class="btn green full">Continue to demo payment →</button>
+</form>
+</div>
+</div>
+<div class="overlay hidden" id="paymentModal">
+<div class="modal">
+<button class="x" data-close>×</button>
+<span class="eyebrow">DEMO PAYMENT</span>
+<h2>Confirm your booking</h2>
+<p id="paymentMeta">
+</p>
+<div class="paybox">
+<b>Simulated payment only</b>
+<p>No real money or payment credentials are collected. Choose a demonstration method below.</p>
+<label class="payment-choice"><input type="radio" name="demoPaymentMethod" value="UPI" checked> UPI simulation</label>
+<label class="payment-choice"><input type="radio" name="demoPaymentMethod" value="Card"> Card simulation</label>
+<label class="payment-choice"><input type="radio" name="demoPaymentMethod" value="Net banking"> Net banking simulation</label>
+<label class="payment-choice"><input type="checkbox" id="simulatePaymentFailure"> Simulate a failed payment (testing)</label>
+<p class="hint" id="paymentStatus" aria-live="polite"></p>
+</div>
+<button class="btn green full" id="payNow">Simulate payment & book →</button>
+</div>
+</div>
+<div class="overlay hidden" id="accountModal">
+<div class="modal wide">
+<button class="x" data-close>×</button>
+<span class="eyebrow" id="accountEyebrow">YOUR ACCOUNT</span>
+<h2 id="accountTitle">My bookings</h2>
+<div id="accountContent">
+</div>
+</div>
+</div>
+<div class="toast hidden" id="toast">
+</div>
+<script src="app.js">
+</script>
+</body>
+</html>
