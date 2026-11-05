@@ -15,7 +15,7 @@
 <header class="header">
 <a class="brand" href="#">
 <span class="mark">
-    <img src="assets\ksrtc-logo.png">
+    <img src="assets/ksrtc-logo.png">
 </span>
 <span>
 <b>KSRTC <i>Swift</i>
@@ -30,7 +30,7 @@
 <a href="#why">Why Swift?</a>
 <button class="linkbtn" id="myBookingsBtn">My bookings</button>
 <button class="btn red" id="loginBtn">Sign in</button>
-<button class="btn green" id="adminBtn">Admin demo</button>
+<button class="btn green" id="adminBtn">Admin sign in</button>
 <button class="btn outline" id="crewBtn">Crew sign in</button>
 </nav>
 </header>
@@ -48,7 +48,7 @@
 <span>✓ Printable ticket</span>
 </div>
 </div>
-<div class="hero-art" aria-label="KSRTC Swift roleplay gallery">
+<div class="hero-art" aria-label="KSRTC Swift gallery">
     <div class="hero-slides">
       <img class="hero-slide active" src="https://staticassets.onlineksrtcswift.com/images/onlineksrtcswift.com-gallery-29-1756703797.jpg" alt="Intercity passenger bus">
       <img class="hero-slide" src="https://staticassets.onlineksrtcswift.com/images/onlineksrtcswift.com-gallery-0-1787056630.jpg" alt="Coach bus on the road">
@@ -65,13 +65,13 @@
 <span class="eyebrow">BOOK YOUR JOURNEY</span>
 <h2>Where would you like to go?</h2>
 </div>
-<span class="secure">▣ Demo reservation</span>
+<span class="secure">Secure booking</span>
 </div>
 <form id="searchForm" class="search-grid">
-<label>FROM<input id="from" placeholder="Departure city" autocomplete="off" required>
+<label>FROM<input id="from" list="citySuggestions" placeholder="Departure city" autocomplete="off" required>
 </label>
 <button type="button" class="swap" id="swap">⇄</button>
-<label>TO<input id="to" placeholder="Arrival city" autocomplete="off" required>
+<label>TO<input id="to" list="citySuggestions" placeholder="Arrival city" autocomplete="off" required>
 </label>
 
 <label>JOURNEY DATE<input id="date" type="date" required>
@@ -83,6 +83,7 @@
 </button>
 <label class="check">
 <input id="roundTrip" type="checkbox"> Round trip</label>
+<datalist id="citySuggestions"></datalist>
 </form>
 </section>
 <section class="results hidden" id="results">
@@ -98,7 +99,7 @@
 </div>
 </section>
 <section class="timetable-section" id="timetable">
-  <div class="section-title"><div><span class="eyebrow">SERVICE INFORMATION</span><h2>Published timetable</h2><p>Browse all currently scheduled roleplay services.</p></div><span class="secure">Updated from published services</span></div>
+  <div class="section-title"><div><span class="eyebrow">SERVICE INFORMATION</span><h2>Published timetable</h2><p>Browse all currently scheduled services.</p></div><span class="secure">Updated from published services</span></div>
   <div class="table-wrap timetable-wrap"><table class="manifest-table timetable-table"><thead><tr><th>Route</th><th>Date</th><th>Departure</th><th>Arrival</th><th>Service</th><th>Fare</th><th>Status</th></tr></thead><tbody id="timetableBody"><tr><td colspan="7" class="table-empty">Loading services…</td></tr></tbody></table></div>
 </section>
 <section class="features" id="why">
@@ -126,7 +127,7 @@
 <div>
 <span class="eyebrow">BUILT FOR THE COMMUNITY</span>
 <h2>Your next journey awaits.</h2>
-<p>Discover roleplay routes, review service timings, and reserve a seat for your next trip with the KSRTC Swift.</p>
+<p>Discover routes, review service timings, and reserve a seat for your next trip.</p>
 </div>
 <a class="btn white notice-cta" href="#search">Find a service</a>
 </section>
@@ -140,9 +141,9 @@
 <small>Ticket booking portal</small>
 </span>
 </div>
-<p>Independent demonstration platform. Not an official KSRTC website.</p>
+<p>Independent booking platform. Not affiliated with KSRTC.</p>
 <small>© <span id="year">
-</span> Neo OPRS · Offline prototype</small>
+</span> Neo OPRS · Booking platform</small>
 </footer>
 <div class="overlay hidden" id="authModal">
 <div class="modal">
@@ -153,7 +154,7 @@
 <div class="tabs">
 <button class="active" data-tab="login">User sign in</button>
 <button data-tab="register">Create account</button>
-<button data-tab="admin">Admin demo</button>
+<button data-tab="admin">Administrator</button>
 <button data-tab="crew">Crew sign in</button>
 </div>
 <form id="authForm">
@@ -161,15 +162,14 @@
 </label>
 <label>Email address<input id="authEmail" type="email" placeholder="you@example.com" required>
 </label>
-<label>Password<input id="authPassword" type="password" minlength="4" placeholder="Demo password" required>
+<label>Password<input id="authPassword" type="password" minlength="4" placeholder="Your password" required>
 </label>
-<p class="hint" id="authHint">Demo only: account details stay in this browser.</p>
+<p class="hint" id="authHint">Your account details are stored by this application.</p>
 <button class="btn green full" id="authSubmit">Sign in →</button>
 <p class="error" id="authError">
 </p>
 </form>
-<p class="demo-creds">Admin demo login: <b>admin@neo.demo</b> / <b>admin123</b>
-</p>
+
 </div>
 </div>
 <div class="overlay hidden" id="seatModal">
@@ -216,28 +216,38 @@
 </p>
 <form id="passengerForm">
 <div id="passengerFields"></div>
-<button class="btn green full">Continue to demo payment →</button>
+<button class="btn green full">Continue to payment →</button>
 </form>
 </div>
 </div>
 <div class="overlay hidden" id="paymentModal">
-<div class="modal">
-<button class="x" data-close>×</button>
-<span class="eyebrow">DEMO PAYMENT</span>
-<h2>Confirm your booking</h2>
-<p id="paymentMeta">
-</p>
-<div class="paybox">
-<b>Simulated payment only</b>
-<p>No real money or payment credentials are collected. Choose a demonstration method below.</p>
-<label class="payment-choice"><input type="radio" name="demoPaymentMethod" value="UPI" checked> UPI simulation</label>
-<label class="payment-choice"><input type="radio" name="demoPaymentMethod" value="Card"> Card simulation</label>
-<label class="payment-choice"><input type="radio" name="demoPaymentMethod" value="Net banking"> Net banking simulation</label>
-<label class="payment-choice"><input type="checkbox" id="simulatePaymentFailure"> Simulate a failed payment (testing)</label>
-<p class="hint" id="paymentStatus" aria-live="polite"></p>
-</div>
-<button class="btn green full" id="payNow">Simulate payment & book →</button>
-</div>
+  <div class="modal payment-modal">
+    <button class="x" data-close aria-label="Close payment window">×</button>
+    <span class="eyebrow">SECURE CHECKOUT</span>
+    <h2>Review and pay</h2>
+    <p id="paymentMeta"></p>
+
+    <div id="paymentSummary" class="payment-summary"></div>
+
+    <section class="payment-methods" aria-labelledby="paymentMethodsTitle">
+      <h3 id="paymentMethodsTitle">Available payment methods</h3>
+      <div class="payment-logo-grid">
+        <div class="payment-logo-placeholder"><strong>UPI</strong><span>UPI</span></div>
+        <div class="payment-logo-placeholder"><strong>VISA</strong><span>Cards</span></div>
+        <div class="payment-logo-placeholder"><strong>RuPay</strong><span>Cards</span></div>
+        <div class="payment-logo-placeholder"><strong>•••</strong><span>Net banking</span></div>
+        <div class="payment-logo-placeholder"><strong>Wallet</strong><span>Wallets</span></div>
+      </div>
+      <p class="hint">Payment options are presented by the secure payment provider. Replace these text placeholders with approved provider artwork if required.</p>
+    </section>
+
+    <div class="payment-security-note">
+      <span aria-hidden="true">▣</span>
+      <span>Payment details are entered only in the secure payment provider checkout.</span>
+    </div>
+    <p class="payment-status" id="paymentStatus" aria-live="polite"></p>
+    <button class="btn green full" id="payNow">Continue to secure payment →</button>
+  </div>
 </div>
 <div class="overlay hidden" id="accountModal">
 <div class="modal wide">
