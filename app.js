@@ -199,7 +199,7 @@
   };
   $('#adminBtn').onclick = () => {
     setMode('admin');
-    $('#authEmail').value = 'admin@neo.example';
+    $('#authEmail').value = 'admin@neo.demo';
     $('#authPassword').value = 'admin123';
     open('authModal');
 
