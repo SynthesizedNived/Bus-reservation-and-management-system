@@ -1355,3 +1355,20 @@ footer p {
         gap: 10px;
     }
 }
+
+
+/* Clickable simulated payment methods */
+.payment-logo-placeholder {
+    cursor: pointer;
+    font: inherit;
+    padding: 8px 4px;
+    transition: border-color .15s ease, background .15s ease, box-shadow .15s ease;
+}
+.payment-logo-placeholder:hover { border-color: var(--green); }
+.payment-logo-placeholder.selected {
+    border: 2px solid var(--green);
+    background: #eff8f1;
+    box-shadow: 0 0 0 2px rgba(18,99,63,.08);
+}
+.payment-logo-placeholder:focus-visible { outline: 3px solid rgba(18,99,63,.25); outline-offset: 2px; }
+.simulate-failure { margin-top: 9px; }

@@ -1,9 +1,7 @@
 (() => {
   const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
   const KEY = 'neo-oprs-offline-v1';
-  // Set this to your backend origin when the payment API is deployed.
-  // Keep Razorpay secret keys on the server; never place them in this file.
-  const PAYMENT_API_BASE = window.PAYMENT_API_BASE || '';
+  // Browser-only payment simulation. No real money is collected.
   const today = new Date();
   const dateStr = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   $('#date').min = dateStr(today);
@@ -797,202 +795,125 @@
 
   };
   let paymentInProgress = false;
+  let selectedPaymentMethod = 'UPI';
+
   function renderPaymentSummary() {
     const passengers = window.passengerDraft || [];
     const total = passengers.length * Number(activeService?.fare || 0);
     $('#paymentMeta').textContent = `${activeService.from} → ${activeService.to} · ${activeService.date}`;
     $('#paymentSummary').innerHTML = `
-    <div class="payment-summary-row">
-      <span>Journey</span>
-      <strong>${escape(activeService.from)} → ${escape(activeService.to)}</strong>
-    </div>
-    <div class="payment-summary-row">
-      <span>Travel date</span>
-      <strong>${escape(activeService.date)}</strong>
-    </div>
-    <div class="payment-summary-row">
-      <span>Service</span>
-      <strong>${escape(activeService.bus)} · ${escape(activeService.code)}</strong>
-    </div>
-    <div class="payment-summary-row">
-      <span>Selected seats</span>
-      <strong>${selectedSeats.map(escape).join(', ')}</strong>
-    </div>
-    <div class="payment-passengers">
-      <strong>Passenger details</strong>
-      ${passengers.map(passenger => `
-        <div>${escape(passenger.passenger)} · Seat ${escape(passenger.seat)} · ₹${Number(activeService.fare).toLocaleString('en-IN')}</div>
-      `).join('')}
-    </div>
-    <div class="payment-total">
-      <span>Total payable</span>
-      <strong>₹${total.toLocaleString('en-IN')}</strong>
-    </div>
-  `;
-
+      <div class="payment-summary-row"><span>Journey</span><strong>${escape(activeService.from)} → ${escape(activeService.to)}</strong></div>
+      <div class="payment-summary-row"><span>Travel date</span><strong>${escape(activeService.date)}</strong></div>
+      <div class="payment-summary-row"><span>Service</span><strong>${escape(activeService.bus)} · ${escape(activeService.code)}</strong></div>
+      <div class="payment-summary-row"><span>Selected seats</span><strong>${selectedSeats.map(escape).join(', ')}</strong></div>
+      <div class="payment-passengers"><strong>Passenger details</strong>
+        ${passengers.map(passenger => `<div>${escape(passenger.passenger)} · Seat ${escape(passenger.seat)} · ₹${Number(activeService.fare).toLocaleString('en-IN')}</div>`).join('')}
+      </div>
+      <div class="payment-total"><span>Total payable</span><strong>₹${total.toLocaleString('en-IN')}</strong></div>`;
+    selectedPaymentMethod = 'UPI';
+    updatePaymentMethodButtons();
   }
+
+  function updatePaymentMethodButtons() {
+    document.querySelectorAll('[data-payment-method]').forEach(button => {
+      const active = button.dataset.paymentMethod === selectedPaymentMethod;
+      button.classList.toggle('selected', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+  }
+
+  document.querySelectorAll('[data-payment-method]').forEach(button => {
+    button.addEventListener('click', () => {
+      if (paymentInProgress) return;
+      selectedPaymentMethod = button.dataset.paymentMethod;
+      updatePaymentMethodButtons();
+      setPaymentStatus(`${selectedPaymentMethod} selected. This is a simulated payment.`, 'pending');
+    });
+  });
+
   function setPaymentStatus(message, state = '') {
     const status = $('#paymentStatus');
     status.textContent = message;
     status.className = `payment-status ${state}`.trim();
-
   }
-  function loadRazorpayScript() {
-    return new Promise((resolve, reject) => {
-      if (window.Razorpay)
-        return resolve();
-      const script = document.createElement('script');
-      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-      script.onload = resolve;
-      script.onerror = () => reject(new Error('The secure payment window could not be loaded.'));
-      document.head.appendChild(script);
 
-    });
-
+  function setPaymentButtonsBusy(busy) {
+    paymentInProgress = busy;
+    $('#payNow').disabled = busy;
+    $('#simulateFailure').disabled = busy;
+    $('#payNow').textContent = busy ? 'Processing simulated payment…' : 'Continue to payment →';
   }
-  async function beginSecurePayment() {
-    if (paymentInProgress)
-      return;
+
+  function finishSimulatedPayment(success) {
+    if (paymentInProgress) return;
     const passengers = window.passengerDraft;
     if (!Array.isArray(passengers) || !passengers.length || !activeService || !selectedSeats.length) {
-      return setPaymentStatus('Your booking details are incomplete. Please select your seats again.', 'error');
-
+      setPaymentStatus('Your booking details are incomplete. Please select your seats again.', 'error');
+      return;
     }
-    paymentInProgress = true;
-    $('#payNow').disabled = true;
-    $('#payNow').textContent = 'Connecting securely…';
-    setPaymentStatus('Connecting to the secure payment service…', 'pending');
-    try {
-      const expectedAmount = passengers.length * Number(activeService.fare || 0);
-      const orderResponse = await fetch(`${PAYMENT_API_BASE}/api/payments/create-order`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({
+
+    const stillTaken = new Set(db.bookings
+      .filter(b => b.serviceId === activeService.id && b.status === 'Confirmed')
+      .map(b => String(b.seat)));
+    if (passengers.some(passenger => stillTaken.has(String(passenger.seat)))) {
+      closeAll();
+      toast('A selected seat is no longer available. Please select again.');
+      window.passengerDraft = null;
+      selectedSeats = [];
+      chooseService(activeService.id);
+      return;
+    }
+
+    setPaymentButtonsBusy(true);
+    setPaymentStatus('Processing your simulated payment…', 'pending');
+
+    // Short delay makes the demo checkout feel like a payment flow.
+    window.setTimeout(() => {
+      if (!success) {
+        setPaymentStatus('Payment failed (simulation). No booking was created and no money was charged. You can retry or choose another method.', 'error');
+        setPaymentButtonsBusy(false);
+        $('#payNow').textContent = 'Retry payment →';
+        return;
+      }
+
+      const bookingRef = `SIM${Date.now().toString(36).toUpperCase()}`;
+      const transactionRef = `SIMTXN${Math.random().toString(36).slice(2, 10).toUpperCase()}`;
+      passengers.forEach(passenger => {
+        db.bookings.push({
+          ref: bookingRef,
+          user: db.current,
+          ...passenger,
           serviceId: activeService.id,
-          seats: selectedSeats,
-          passengers,
-          journeyDate: activeService.date,
-          expectedAmount,
-          currency: 'INR'
-        })
+          from: activeService.from,
+          to: activeService.to,
+          date: activeService.date,
+          depart: activeService.depart,
+          arrive: activeService.arrive,
+          bus: activeService.bus,
+          code: activeService.code,
+          fare: Number(activeService.fare),
+          status: 'Confirmed',
+          paymentStatus: 'Paid',
+          paymentMethod: selectedPaymentMethod,
+          paymentMode: 'Simulation only — no real transaction',
+          transactionRef,
+          boarded: false,
+          created: new Date().toISOString()
+        });
       });
-      if (!orderResponse.ok) {
-        throw new Error('The payment service is unavailable. No booking has been confirmed.');
 
-      }
-      const order = await orderResponse.json();
-      if (!order.orderId || !order.keyId || !order.amount || !order.currency) {
-        throw new Error('The payment service returned an incomplete order. Please contact support.');
-
-      }
-      await loadRazorpayScript();
-      const checkout = new window.Razorpay({
-        key: order.keyId,
-        order_id: order.orderId,
-        amount: order.amount,
-        currency: order.currency,
-        name: 'KSRTC Swift',
-        description: `${activeService.from} to ${activeService.to}`,
-        prefill: {
-          name: passengers[0].passenger,
-          email: passengers[0].email,
-          contact: passengers[0].phone
-        },
-        notes: { serviceCode: activeService.code },
-        handler: async (paymentResult) => {
-          try {
-            setPaymentStatus('Verifying your payment securely…', 'pending');
-            const verifyResponse = await fetch(`${PAYMENT_API_BASE}/api/payments/verify`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              credentials: 'include',
-              body: JSON.stringify({
-                orderId: paymentResult.razorpay_order_id,
-                paymentId: paymentResult.razorpay_payment_id,
-                signature: paymentResult.razorpay_signature
-              })
-            });
-            const verification = await verifyResponse.json();
-            if (!verifyResponse.ok || verification.verified !== true || !verification.bookingRef) {
-              throw new Error('Payment verification could not be completed. Your booking is not confirmed.');
-
-            }
-            const bookingRef = verification.bookingRef;
-            const transactionRef = paymentResult.razorpay_payment_id;
-            passengers.forEach(passenger => {
-              db.bookings.push({
-                ref: bookingRef,
-                user: db.current,
-                ...passenger,
-                serviceId: activeService.id,
-                from: activeService.from,
-                to: activeService.to,
-                date: activeService.date,
-                depart: activeService.depart,
-                arrive: activeService.arrive,
-                bus: activeService.bus,
-                code: activeService.code,
-                fare: Number(activeService.fare),
-                status: 'Confirmed',
-                paymentStatus: 'Paid',
-                paymentMethod: 'Razorpay',
-                transactionRef,
-                boarded: false,
-                created: new Date().toISOString()
-              });
-
-            });
-            save();
-            window.passengerDraft = null;
-            selectedSeats = [];
-            paymentInProgress = false;
-            closeAll();
-            toast(`Payment verified. Booking ${bookingRef} is confirmed.`);
-            showAccount(false);
-
-          }
-          catch (error) {
-            setPaymentStatus(error.message || 'Payment verification failed. Please contact support before retrying.', 'error');
-            paymentInProgress = false;
-            $('#payNow').disabled = false;
-            $('#payNow').textContent = 'Retry secure payment →';
-
-          }
-
-        },
-        modal: {
-          ondismiss: () => {
-            paymentInProgress = false;
-            $('#payNow').disabled = false;
-            $('#payNow').textContent = 'Retry secure payment →';
-            setPaymentStatus('Payment was cancelled. No booking has been confirmed.', 'error');
-
-          }
-        },
-        theme: { color: '#12633f' }
-      });
-      checkout.on('payment.failed', response => {
-        paymentInProgress = false;
-        $('#payNow').disabled = false;
-        $('#payNow').textContent = 'Retry secure payment →';
-        setPaymentStatus(response.error?.description || 'Payment was not completed. You can try again.', 'error');
-
-      });
-      checkout.open();
-      $('#payNow').textContent = 'Payment window opened';
-
-    }
-    catch (error) {
-      paymentInProgress = false;
-      $('#payNow').disabled = false;
-      $('#payNow').textContent = 'Retry secure payment →';
-      setPaymentStatus(error.message || 'Unable to start payment. Please try again later.', 'error');
-
-    }
-
+      save();
+      window.passengerDraft = null;
+      selectedSeats = [];
+      setPaymentButtonsBusy(false);
+      closeAll();
+      toast(`Simulated payment successful · ${transactionRef} · Booking confirmed.`);
+      showAccount(false);
+    }, 900);
   }
-  $('#payNow').onclick = beginSecurePayment;
+
+  $('#payNow').onclick = () => finishSimulatedPayment(true);
+  $('#simulateFailure').onclick = () => finishSimulatedPayment(false);
   updateHeader();
   save();
   refreshPublicInfo();

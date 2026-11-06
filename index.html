@@ -231,22 +231,23 @@
 
     <section class="payment-methods" aria-labelledby="paymentMethodsTitle">
       <h3 id="paymentMethodsTitle">Available payment methods</h3>
-      <div class="payment-logo-grid">
-        <div class="payment-logo-placeholder"><strong>UPI</strong><span>UPI</span></div>
-        <div class="payment-logo-placeholder"><strong>VISA</strong><span>Cards</span></div>
-        <div class="payment-logo-placeholder"><strong>RuPay</strong><span>Cards</span></div>
-        <div class="payment-logo-placeholder"><strong>•••</strong><span>Net banking</span></div>
-        <div class="payment-logo-placeholder"><strong>Wallet</strong><span>Wallets</span></div>
+      <div class="payment-logo-grid" role="group" aria-label="Choose a simulated payment method">
+        <button type="button" class="payment-logo-placeholder selected" data-payment-method="UPI" aria-pressed="true"><strong>UPI</strong><span>UPI</span></button>
+        <button type="button" class="payment-logo-placeholder" data-payment-method="Visa" aria-pressed="false"><strong>VISA</strong><span>Cards</span></button>
+        <button type="button" class="payment-logo-placeholder" data-payment-method="RuPay" aria-pressed="false"><strong>RuPay</strong><span>Cards</span></button>
+        <button type="button" class="payment-logo-placeholder" data-payment-method="Net banking" aria-pressed="false"><strong>•••</strong><span>Net banking</span></button>
+        <button type="button" class="payment-logo-placeholder" data-payment-method="Wallet" aria-pressed="false"><strong>Wallet</strong><span>Wallets</span></button>
       </div>
-      <p class="hint">Payment options are presented by the secure payment provider. Replace these text placeholders with approved provider artwork if required.</p>
+      <p class="hint">Select a method to continue. This checkout is for demonstration only.</p>
     </section>
 
     <div class="payment-security-note">
       <span aria-hidden="true">▣</span>
-      <span>Payment details are entered only in the secure payment provider checkout.</span>
+      <span>Simulation only. No real payment details are collected and no money will be charged.</span>
     </div>
     <p class="payment-status" id="paymentStatus" aria-live="polite"></p>
-    <button class="btn green full" id="payNow">Continue to secure payment →</button>
+    <button class="btn green full" id="payNow">Continue to payment →</button>
+    <button class="btn outline full simulate-failure" id="simulateFailure" type="button">Simulate failed payment</button>
   </div>
 </div>
 <div class="overlay hidden" id="accountModal">
